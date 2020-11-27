@@ -3,11 +3,14 @@ include version.env
 
 SERVER_NAME=forge-1.12.2-server
 
-.PHONY: build-server push-server
+.PHONY: install uninstall build-server push-server run-server
 
 
 install:
 	bash install.sh
+
+uninstall:
+	bash uninstall.sh
 
 build-server:
 	docker build --network=host --progress=plain -t $(SERVER_NAME) .

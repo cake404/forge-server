@@ -1,3 +1,5 @@
+#!/bin/bash
+
 CUR_DIR=$(pwd)
 
 # Update apt
@@ -21,11 +23,8 @@ apt-get install -y \
         iptables
 
 # Clone/install the mscs project
-git clone https://github.com/MinecraftServerControl/mscs.git
-make -C mscs install
-
-# Copy worlds to mscs directory
-mv worlds/ /opt/mscs/worlds/
+git clone https://github.com/MinecraftServerControl/mscs.git /tmp/mscs
+make -C /tmp/mscs install
 
 # Install forge server
 wget -P /opt/mscs/server \
@@ -34,5 +33,17 @@ cd /opt/mscs/server
 java -jar forge-1.12.2-14.23.5.2854-installer.jar --installServer
 cd $CUR_DIR
 
-# Update mscs so it picks up the added words
+# Copy mscs worlds and settings
+cp -r mscs/* /opt/mscs/
+
+# Allow minecraft user to own mscs directory
+chown -R minecraft:minecraft /opt/mscs
+
+# Update mcsc to pick up worlds
 mscs force-update
+
+# Create cronjob for backing up worlds
+echo "* */4 * * * minecraft /usr/local/bin/mscs backup" \
+    > /etc/cron.d/minecraft_backup
+
+systemctl restart cron
