@@ -26,11 +26,16 @@ apt-get install -y \
 git clone https://github.com/MinecraftServerControl/mscs.git /tmp/mscs
 make -C /tmp/mscs install
 
-# Install forge server
+# Download forge installations
 wget -P /opt/mscs/server \
     https://files.minecraftforge.net/maven/net/minecraftforge/forge/1.12.2-14.23.5.2854/forge-1.12.2-14.23.5.2854-installer.jar
+wget -P /opt/mscs/server \
+    https://files.minecraftforge.net/maven/net/minecraftforge/forge/1.7.10-10.13.4.1614-1.7.10/forge-1.7.10-10.13.4.1614-1.7.10-installer.jar
+
+# Install forge server
 cd /opt/mscs/server
 java -jar forge-1.12.2-14.23.5.2854-installer.jar --installServer
+java -jar forge-1.7.10-10.13.4.1614-1.7.10-installer.jar --installServer
 cd $CUR_DIR
 
 # Copy mscs worlds and settings
